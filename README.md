@@ -8,11 +8,9 @@ Used to emulate some cisco comand pipe outputs, currently:
 Reads configurations in from named files (additional sources planned) and converts to a ConfigList object
 
 ConfigList objects have a number of functions emulating Cisco behaviour:
-| Function                               | Description                                                       |
-|----------------------------------------|-------------------------------------------------------------------|
-|ConfigList.exclude(<regular expression>)| Exclude list members that match Regex                             |
-|ConfigList.include(<regular expression>)| Only include list members that match Regex                        |
-|ConfigList.section(<regular expression>)| Include lines that match and any lines at a deeper indent heirachy|
+* ConfigList.exclude(<regular expression>)
+* ConfigList.include(<regular expression>)
+* ConfigList.section(<regular expression>)
 
 All above functions return ConfigList objects so functions are able to be chained as show in the examples below.
 
