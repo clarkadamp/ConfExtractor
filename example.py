@@ -16,8 +16,7 @@ if __name__ == '__main__':
     print (c.include(r'^interface').exclude(r'[Cc]ellular'))
 
  
-    config = '''
-router bgp 65000
+    config = '''router bgp 65000
  bgp log-neighbor-changes
  bgp listen range 0.0.0.0/0 peer-group InternetL3VPN
  no bgp default ipv4-unicast
@@ -40,8 +39,7 @@ router bgp 65000
   redistribute connected
   redistribute static
   default-information originate
- exit-address-family
-'''
+ exit-address-family'''
     c = ConfExtractor()
     c.fromString(config)
     print (c.section(r'router bgp').section(r'vrf cust1').include(r'redist').exclude(r'static'))

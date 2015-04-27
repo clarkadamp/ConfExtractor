@@ -68,8 +68,15 @@ class ConfigList(list):
         #
         # Identified by first in a list of subsequent lines offset by the
         # original index, plus 1
-        secEnd = [i for i,t in list(enumerate(self[i+1:]))
-                if self._getIndentLen(t) <= iLen][0] + i + 1
+        try:
+            secEnd = [i for i,t in list(enumerate(self[i+1:]))
+                    if self._getIndentLen(t) <= iLen][0] + i + 1
+        except IndexError:
+            # if the section includes the last line, attempting
+            # to check the line after rasies an IndexError
+            # the section offset is the list end
+            secEnd = len(self) + 1
+
         # return a new list based on the section start and end
         l = ConfigList(self[i:secEnd])
         self.logger.debug('_subsection: Index {}: Lines {}'.format(i, len(l)))

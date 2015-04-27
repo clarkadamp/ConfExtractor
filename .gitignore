@@ -5,6 +5,9 @@ __pycache__/
 # C extensions
 *.so
 
+# VI Swp files
+*.swp
+
 # Distribution / packaging
 .Python
 env/
