@@ -37,6 +37,9 @@ class ConfigList(list):
         # Also has the option of excluding based on regex e
         return ConfigList([x for x in self if not re.search(regex, x)])
 
+    def b(self, regex):
+        return self.begin(regex)
+
     def configBlocks(self, startBlockRegex, endBlockRegex):
         self.startBlockRegex = startBlockRegex
         self.endBlockRegex = endBlockRegex
@@ -53,10 +56,17 @@ class ConfigList(list):
         # Also has the option of excluding based on regex e
         return ConfigList([x for x in self if not re.search(regex, x)])
 
+    def e(self, regex):
+        return self.exclude(regex)
+
     def include(self, regex):
         # Simulates Cisco IOS show | include string
         # Also has the option of excluding based on regex e
         return ConfigList([x for x in self if re.search(regex, x)])
+
+    def i(self, regex):
+        return self.include(regex)
+
     def _getIndentLen(self, t):
         # Return count of leading whitespace
         return len(re.search(r'^(\s*)(.*?)$', t).groups('')[0])
@@ -95,16 +105,21 @@ class ConfigList(list):
                 self.logger.debug('section: Index {}: {}'.format(idxs[0],
                                                             self[idxs[0]]))
                 l = self._subSection(currIndex)
+                # yield the current section
                 yield l
                 # Skip indexes that are after the current index and fall within
                 # lines already contained in the last _subSection call
                 idxs = [i for i in idxs if i >= currIndex + len(l)]
 
     def section(self, regex):
+        # return single config list based on sections()
         retList = ConfigList()
         for l in list(self.sections(regex)):
             retList.extend(l)
         return retList
+
+    def s(self, regex):
+        return self.section(regex)
 
     def hasString(self, regex):
         for l in self:
