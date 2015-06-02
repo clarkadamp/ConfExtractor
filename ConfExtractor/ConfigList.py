@@ -82,12 +82,11 @@ class ConfigList(list):
         self.logger.debug('_subsection: Index {}: Lines {}'.format(i, len(l)))
         return l
 
-    def section(self, regex):
+    def sections(self, regex):
             # Generate indexes for lines that match the regex
             idxs = [i for i, x in enumerate(self)
                               if re.search(regex, x)]
 
-            retList = ConfigList()
             # Iterate through the idxs list that may be modified after each
             # index.  This tries to ensure that nested regex matches do not
             # create double entries in the overall section call
@@ -96,12 +95,28 @@ class ConfigList(list):
                 self.logger.debug('section: Index {}: {}'.format(idxs[0],
                                                             self[idxs[0]]))
                 l = self._subSection(currIndex)
-                retList.extend(l)
+                yield l
                 # Skip indexes that are after the current index and fall within
                 # lines already contained in the last _subSection call
                 idxs = [i for i in idxs if i >= currIndex + len(l)]
 
-            return retList
+    def section(self, regex):
+        retList = ConfigList()
+        for l in list(self.sections(regex)):
+            retList.extend(l)
+        return retList
+
+    def hasString(self, regex):
+        for l in self:
+            if re.search(regex, l):
+                return True
+        return False
+
+    def hasNoString(self, regex):
+        for l in self:
+            if re.search(regex, l):
+                return False
+        return True
 
     def __str__(self):
         # provide a string representation of the list

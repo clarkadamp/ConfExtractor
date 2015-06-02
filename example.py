@@ -13,9 +13,26 @@ from ConfExtractor.ConfExtractor import  ConfExtractor
 if __name__ == '__main__':
     c = ConfExtractor()
     c.fromFile('cisco.config')
-    print (c.include(r'^interface').exclude(r'[Cc]ellular'))
 
- 
+    print ("### show runn | inc ^interface | ex [Cc]ellular")
+    print (c.include(r'^interface').exclude(r'[Cc]ellular'))
+    print ('\n\n')
+
+    l = list(c.sections(r'^interface'))
+    print ("### print interface names of interfaces with dialer subcommands")
+    for s in [x for x in l if x.hasString('dialer')]:
+        print (s[0])
+
+    print ('\n\n')
+
+    l = list(c.sections(r'^interface'))
+    print ("### print interface names of interfaces without dialer subcommands")
+    for s in [x for x in l if x.hasNoString('dialer')]:
+        print (s[0])
+
+    print ('\n\n')
+
+    print ("### show runn | sec ^router bgp | inc redist | ex static")
     config = '''router bgp 65000
  bgp log-neighbor-changes
  bgp listen range 0.0.0.0/0 peer-group InternetL3VPN
@@ -43,4 +60,6 @@ if __name__ == '__main__':
     c = ConfExtractor()
     c.fromString(config)
     print (c.section(r'router bgp').section(r'vrf cust1').include(r'redist').exclude(r'static'))
+
+
 
